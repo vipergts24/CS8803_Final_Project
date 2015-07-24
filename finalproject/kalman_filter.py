@@ -122,12 +122,13 @@ def predict(data,visualize):
             predict_robot.pendown() # or .stamp()
     predictions = []
     #Two Second Predictions - Blue
-    unknown_robot = turtle.Turtle()
-    unknown_robot.shape('turtle')
-    unknown_robot.color('blue')
-    unknown_robot.resizemode('user')
-    unknown_robot.shapesize(0.25, 0.25, 0.25)
-    unknown_robot.penup()
+    if visualize:
+        unknown_robot = turtle.Turtle()
+        unknown_robot.shape('turtle')
+        unknown_robot.color('blue')
+        unknown_robot.resizemode('user')
+        unknown_robot.shapesize(0.25, 0.25, 0.25)
+        unknown_robot.penup()
     for i in range(60):
         x = int(X.value[0][0])
         y = int(X.value[1][0])
