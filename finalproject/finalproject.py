@@ -18,7 +18,9 @@ def main():
         testData = data[len(data)-60:]
     predictions = predict(trainingData,args.visualize)
     assert len(predictions) == 60
-    #for element in predictions:
+    with open(args.o, 'w') as f:
+        for element in predictions:
+            f.write("%d,%d\n" % (element[0], element[1]))
 
 
 
