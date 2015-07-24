@@ -13,7 +13,7 @@ def main():
     trainingData = data
     testData = None
     if args.test:
-        # If in testing mode, we want to use the last 60 seconds
+        # If in testing mode, we want to use the last 60 frames as test data
         trainingData = data[:-60]
         testData = data[len(data)-60:]
     predictions = predict(trainingData)
