@@ -16,7 +16,7 @@ def main():
         # If in testing mode, we want to use the last 60 frames as test data
         trainingData = data[:-60]
         testData = data[len(data)-60:]
-    predictions = predict(trainingData)
+    predictions = predict(trainingData,args.visualize)
     assert len(predictions) == 60
     #for element in predictions:
 

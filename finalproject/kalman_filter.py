@@ -1,6 +1,6 @@
 from matrix import *
 from util import *
-
+import turtle
 X = None
 P = None
 measurement_noise = 0.05
@@ -65,10 +65,30 @@ def kalman_filter(measurement,OTHER,X,P):
 
     return X,P
 
-def predict(data):
+def predict(data,visualize):
+    if visualize:
+        window = turtle.Screen()
+        window.bgcolor('white')
+        #Measurements - Green
+        broken_robot = turtle.Turtle()
+        broken_robot.shape('turtle')
+        broken_robot.color('green')
+        broken_robot.resizemode('user')
+        broken_robot.shapesize(0.25, 0.25, 0.25)
+        broken_robot.penup()
+        #Predictions - Red
+        predict_robot = turtle.Turtle()
+        predict_robot.shape('turtle')
+        predict_robot.color('red')
+        predict_robot.resizemode('user')
+        predict_robot.shapesize(0.25, 0.25, 0.25)
+        predict_robot.penup()
     OTHER = None
     for element in data:
         x,y = element
+        if visualize:
+            broken_robot.goto(int(x)/2-500, 300-int(y)/2) # flip the y and offset the x
+            broken_robot.pendown() # or .stamp()
         global X
         global P
         if X is None:
@@ -97,7 +117,17 @@ def predict(data):
         OTHER['distance'] = distance_between((x,y),OTHER['lastMeasurement'])
         X,P = kalman_filter((x,y),OTHER,X,P)
         OTHER['lastMeasurement'] = (x,y)
+        if visualize:
+            predict_robot.goto(int(X.value[0][0])/2-500, 300-int(X.value[1][0])/2) # flip the y and offset the x
+            predict_robot.pendown() # or .stamp()
     predictions = []
+    #Two Second Predictions - Blue
+    unknown_robot = turtle.Turtle()
+    unknown_robot.shape('turtle')
+    unknown_robot.color('blue')
+    unknown_robot.resizemode('user')
+    unknown_robot.shapesize(0.25, 0.25, 0.25)
+    unknown_robot.penup()
     for i in range(60):
         x = int(X.value[0][0])
         y = int(X.value[1][0])
@@ -109,5 +139,8 @@ def predict(data):
         OTHER['distance'] = distance_between((x,y),OTHER['lastMeasurement'])
         X,P = kalman_filter((x,y),OTHER,X,P)
         OTHER['lastMeasurement'] = (x,y)
+        if visualize:
+            unknown_robot.goto(int(X.value[0][0])/2-500, 300-int(X.value[1][0])/2) # flip the y and offset the x
+            unknown_robot.pendown()            
     return predictions
 
