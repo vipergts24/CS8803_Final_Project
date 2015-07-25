@@ -5,6 +5,8 @@ X = None
 P = None
 measurement_noise = 0.05
 
+from collide import collision_update
+
 def kalman_filter(measurement,OTHER,X,P):
     # identity matrix
     I = matrix([[1., 0., 0., 0.,0.],
@@ -114,6 +116,8 @@ def predict(data,visualize):
         angle = angle_trunc(angle)
         OTHER['lastAngle'] = angle
         OTHER['turningAngle'] = angle - OTHER['lastAngle']
+        angle = collision_update(x, y, angle)
+        OTHER['lastAngle'] = angle
         OTHER['distance'] = distance_between((x,y),OTHER['lastMeasurement'])
         X,P = kalman_filter((x,y),OTHER,X,P)
         OTHER['lastMeasurement'] = (x,y)
