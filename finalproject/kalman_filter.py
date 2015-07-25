@@ -1,6 +1,7 @@
 from matrix import *
 from util import *
 import turtle
+#import time
 X = None
 P = None
 measurement_noise = 0.05
@@ -114,10 +115,10 @@ def predict(data,visualize):
             errorPercentage = (abs(errorPercentX) + abs(errorPercentY))*100
         angle = atan2(y-OTHER['lastMeasurement'][1],x-OTHER['lastMeasurement'][0])
         angle = angle_trunc(angle)
-        OTHER['lastAngle'] = angle
-        OTHER['turningAngle'] = angle - OTHER['lastAngle']
         angle = collision_update(x, y, angle)
         OTHER['lastAngle'] = angle
+        OTHER['turningAngle'] = angle - OTHER['lastAngle']
+        #OTHER['lastAngle'] = angle
         OTHER['distance'] = distance_between((x,y),OTHER['lastMeasurement'])
         X,P = kalman_filter((x,y),OTHER,X,P)
         OTHER['lastMeasurement'] = (x,y)
@@ -139,6 +140,7 @@ def predict(data,visualize):
         predictions.append((x,y))
         angle = atan2(y-OTHER['lastMeasurement'][1],x-OTHER['lastMeasurement'][0])
         angle = angle_trunc(angle)
+        angle = collision_update(x, y, angle)
         OTHER['lastAngle'] = angle
         OTHER['turningAngle'] = angle - OTHER['lastAngle']
         OTHER['distance'] = distance_between((x,y),OTHER['lastMeasurement'])
@@ -147,5 +149,6 @@ def predict(data,visualize):
         if visualize:
             unknown_robot.goto(int(X.value[0][0])/2-500, 300-int(X.value[1][0])/2) # flip the y and offset the x
             unknown_robot.pendown()            
+    #time.sleep(30)
     return predictions
 

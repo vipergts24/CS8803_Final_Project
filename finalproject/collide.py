@@ -9,11 +9,12 @@ OBSTACLE_CENTER = (1000/2 - X_OFFSET, Y_OFFSET - 540/2)
 
 from util import distance_between
 from math import degrees
+from math import pi
 
 def collision_update(x, y, heading):
     # Hitting Center
     dist = distance_between((x,y), OBSTACLE_CENTER)
-    if dist <= 50:
+    if False and dist <= 50:
         s = sin(radians(heading))
         c = cos(radians(heading))
         # angle of the tangent
@@ -23,8 +24,8 @@ def collision_update(x, y, heading):
         # reflection angle of the robot
         heading = degrees(rca + (ca - rca) * 2)%360
     # Hitting Walls
-    if x < MIN_X/2 - X_OFFSET or x > MAX_X/2 - X_OFFSET:
-        heading = (180 - heading) % 360
-    if y > Y_OFFSET - MIN_Y/2 or y < Y_OFFSET - MAX_Y/2:
-        heading = -heading%360
+    if x < MIN_X or x > MAX_X:#x < MIN_X/2 - X_OFFSET or x > MAX_X/2 - X_OFFSET:
+        heading = pi - heading #(180 - heading) % 360
+    if y < MIN_Y or y > MAX_Y: #y > Y_OFFSET - MIN_Y/2 or y < Y_OFFSET - MAX_Y/2:
+        heading = -heading #%360
     return heading
