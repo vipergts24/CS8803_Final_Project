@@ -9,10 +9,12 @@ from matrix import *
 import turtle
 
 def collideSetup():
-    global minX,minY,maxX,maxY,xOffset, yOffset 
+    global minX,minY,maxX,maxY,xOffset, yOffset,obstacleCenter
     xOffset, yOffset = 500,300
     minX,minY = 240,105
     maxX,maxY = 1696,974
+    obstacleBottom = (1000/2-xOffset,yOffset-640/2)
+    obstacleCenter = (1000/2-xOffset,yOffset-540/2)
     window = turtle.Screen()
     window.bgcolor('white')
     box = turtle.Turtle()
@@ -30,12 +32,12 @@ def collideSetup():
     obstacle = turtle.Turtle()
     obstacle.color('#AA0000')
     obstacle.penup()
-    obstacle.goto(1000/2-xOffset,yOffset-640/2)
+    obstacle.goto(obstacleBottom)
     obstacle.pendown()
     obstacle.circle(50)
     obstacle.penup()
     obstacle.hideturtle()
-            
+
     global broken_robot
     broken_robot = turtle.Turtle()
     broken_robot.shape('turtle')
@@ -47,22 +49,35 @@ def collideSetup():
 
 def move_and_collide(x, y, heading, velocity):
     collision = False
-    broken_robot.setheading(80)
+    broken_robot.setheading(333)
     broken_robot.goto(x,y)
     broken_robot.pendown()
     while True:
         x,y = broken_robot.position()
         heading = broken_robot.heading()
+        # Hitting Center
+        dist = distance_between(broken_robot.position(), obstacleCenter)
+        if dist<=50:
+            s = sin(radians(heading))
+            c = cos(radians(heading))
+            # angle of the tangent
+            ca = atan2(y-obstacleCenter[1], x-obstacleCenter[0])
+            # reversed collision angle of the robot
+            rca = atan2(-s, -c)
+            # reflection angle of the robot
+            heading = degrees(rca + (ca - rca) * 2)%360
+            print heading
+            broken_robot.setheading(heading)
+            
+
+        # Hitting Walls
         if x<minX/2-xOffset or x>maxX/2-xOffset:
             heading = (180 - heading) % 360
             broken_robot.setheading(heading)
-        if y>yOffset-minY/2:
+        if y>yOffset-minY/2 or y< yOffset-maxY/2:
             heading = -heading % 360
             broken_robot.setheading(heading)
-        else:
-            if y< yOffset-maxY/2:
-                heading = -heading % 360
-                broken_robot.setheading(heading)
+
         broken_robot.forward(velocity)
 
 def angle_trunc(a):
