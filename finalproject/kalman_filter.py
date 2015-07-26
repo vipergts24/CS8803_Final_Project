@@ -72,6 +72,27 @@ def predict(data,visualize):
     if visualize:
         window = turtle.Screen()
         window.bgcolor('white')
+        #Boundaries - Gray
+        box = turtle.Turtle()
+        box.color('#AAAAAA')
+        box.penup()
+        box.goto(240/2-500,300-105/2)
+        box.pendown()
+        box.goto(1696/2-500,300-105/2)
+        box.goto(1696/2-500,300-974/2)
+        box.goto(240/2-500,300-974/2)
+        box.goto(240/2-500,300-105/2)
+        box.penup()
+        box.hideturtle()
+        #Center Obstacle - Red
+        obstacle = turtle.Turtle()
+        obstacle.color('#AA0000')
+        obstacle.penup()
+        obstacle.goto(1000/2-500,300-642/2)
+        obstacle.pendown()
+        obstacle.circle(50)
+        obstacle.penup()
+        obstacle.hideturtle()
         #Measurements - Green
         broken_robot = turtle.Turtle()
         broken_robot.shape('turtle')

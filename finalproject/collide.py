@@ -1,11 +1,11 @@
-X_OFFSET = 500
-Y_OFFSET = 300
-MIN_X = 240
-MIN_Y = 105
-MAX_X = 1696
-MAX_Y = 974
+#X_OFFSET = 500
+#Y_OFFSET = 300
+MIN_X = 248     #240 before correction 
+MIN_Y = 111     #105 before correction
+MAX_X = 1690    #1696 before correction
+MAX_Y = 967     #974 before correction
 #OBSTACLE_BOTTOM = (1000/2 - X_OFFSET, Y_OFFSET - 640/2)
-OBSTACLE_CENTER = (1000, 540)
+OBSTACLE_CENTER = (1000, 542)
 
 from util import distance_between
 from math import *
