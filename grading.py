@@ -20,9 +20,10 @@ inputs = [directory + "/inputs/test%02d.txt" % i for i in range(1, NUM_INPUTS+1)
 actuals = ["actual/%02d.txt" % i for i in range(1, NUM_INPUTS+1)]
 tests = []
 for i, filename in enumerate(inputs):
-    os.system('python %s/finalproject.py %s' % (directory, filename))
+    os.system('python %s/finalproject.py %s --test True' % (directory, filename))
     tests.append(([convert_line(line) for line in open('prediction.txt', 'r').readlines()],
                   [convert_line(line) for line in open(actuals[i], 'r').readlines()]))
 
 errors = sorted([error(l1, l2) for (l1, l2) in tests])
+print errors
 print sum(errors[1:-1]) / (NUM_INPUTS - 2)
