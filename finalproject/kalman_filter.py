@@ -144,7 +144,7 @@ def predict(data,visualize):
             errorPercentage = (abs(errorPercentX) + abs(errorPercentY))*100
         angle = atan2(y-OTHER['lastMeasurement'][1],x-OTHER['lastMeasurement'][0])
         angle = angle_trunc(angle)
-        angle,didCollide = collision_update(x, y, angle)
+        x,y,angle,didCollide = collision_update(x, y, angle)
         OTHER['lastAngle'] = angle
         OTHER['turningAngle'] = angle - OTHER['lastAngle']
         #OTHER['lastAngle'] = angle
@@ -191,7 +191,7 @@ def predict(data,visualize):
         else:
             angle = atan2(y-OTHER['lastMeasurement'][1],x-OTHER['lastMeasurement'][0])
         angle = angle_trunc(angle)
-        angle,didCollide = collision_update(x, y, angle)
+        x,y,angle,didCollide = collision_update(x, y, angle)
         OTHER['lastAngle'] = angle
         OTHER['turningAngle'] = angle - OTHER['lastAngle']
         #OTHER['distance'] = distance_between((x,y),OTHER['lastMeasurement'])

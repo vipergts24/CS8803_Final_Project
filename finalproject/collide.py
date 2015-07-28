@@ -26,10 +26,20 @@ def collision_update(x, y, heading):
         # reflection angle of the robot
         heading = rca + (ca - rca) * 2
     # Hitting Walls
-    if x < MIN_X or x > MAX_X:#x < MIN_X/2 - X_OFFSET or x > MAX_X/2 - X_OFFSET:
+    if x < MIN_X:
         didCollide = True
-        heading = pi - heading #(180 - heading) % 360
-    if y < MIN_Y or y > MAX_Y: #y > Y_OFFSET - MIN_Y/2 or y < Y_OFFSET - MAX_Y/2:
+        heading = pi - heading
+        x = MIN_X + 1
+    elif x > MAX_X:
+        didCollide = True
+        heading = pi - heading
+        x = MAX_X - 1
+    if y < MIN_Y:
         didCollide = True
         heading = -heading #%360
-    return heading,didCollide
+        y = MIN_Y - 1
+    elif y > MAX_Y: 
+        didCollide = True
+        heading = -heading #%360
+        y = MAX_Y - 1
+    return x,y,heading,didCollide
