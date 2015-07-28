@@ -1,7 +1,7 @@
 import argparse
 from util import readData
 from kalman_filter import predict
-
+import time
 def main():
     parser = argparse.ArgumentParser(description='Robot Tracker')
     parser.add_argument('input_filename', type=str, help='input file name')
@@ -25,4 +25,6 @@ def main():
 
 
 if __name__ == '__main__':
+    x = time.clock()
     main()
+    print time.clock() - x
