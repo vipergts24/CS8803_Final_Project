@@ -25,6 +25,6 @@ def main():
 
 
 if __name__ == '__main__':
-    x = time.clock()
+    #x = time.clock()
     main()
-    print time.clock() - x
+    #print time.clock() - x
