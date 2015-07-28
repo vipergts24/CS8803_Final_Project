@@ -7,8 +7,8 @@ X = None
 P = None
 
 measurement_noise = 0.05
-historicalDequeSize = 10 #The maximum number of historical entries we keep using FIFO
-historicalMinimum = 1 #The minimum number of historical data required to predict a historical vector
+historicalDequeSize = 5 #The maximum number of historical entries we keep using FIFO
+historicalMinimum = 4 #The minimum number of historical data required to predict a historical vector
 historicalDeque = deque(maxlen=historicalDequeSize)
 
 from collide import collision_update
@@ -154,8 +154,8 @@ def predict(data,visualize):
         if didCollide:#Reset historical
             historicalDeque = deque(maxlen=historicalDequeSize)
         else:
-            #normalizedVector = OTHER['distance'] * (cos(OTHER['lastAngle']+OTHER['turningAngle'])+sin(OTHER['lastAngle']+OTHER['turningAngle']))
             normalizedVector = (OTHER['distance']*cos(OTHER['lastAngle'] + OTHER['turningAngle']),OTHER['distance']*sin(OTHER['lastAngle'] + OTHER['turningAngle']))
+            #normalizedVector = (cos(OTHER['lastAngle'] + OTHER['turningAngle']),sin(OTHER['lastAngle'] + OTHER['turningAngle']))
             if len(historicalDeque) == historicalDequeSize:
                 historicalDeque.popleft()
             historicalDeque.append(normalizedVector)
@@ -172,24 +172,20 @@ def predict(data,visualize):
         unknown_robot.resizemode('user')
         unknown_robot.shapesize(0.25, 0.25, 0.25)
         unknown_robot.penup()
+    #print historicalDeque
     for i in range(60):
+        #print 'deque: ',historicalDeque
         x = int(X.value[0][0])
         y = int(X.value[1][0])
         predictions.append((x,y))
         if len(historicalDeque) > historicalMinimum:#If we have history, use it for our prediction
             xVector = 0
             yVector = 0
-            vectorWeight = 1/historicalDequeSize
-            power = 0
             for vector in historicalDeque:
-                xVector += vector[0] * (2**power)
-                yVector += vector[1] * (2**power)
-                power += 1
-                #xVector += vector[0] + vector[0] * vectorWeight
-                #yVector += vector[1] + vector[1] * vectorWeight
-                #vectorWeight += vectorWeight
-            xVector /= (2**len(historicalDeque) - 1)
-            yVector /= (2**len(historicalDeque) - 1)
+                xVector += vector[0]
+                yVector += vector[1]
+            xVector = xVector/len(historicalDeque)
+            yVector = yVector/len(historicalDeque)
             angle = atan2(yVector,xVector)
             #print 'Historical Vector Angle: ', angle*180/pi
         else:
@@ -198,15 +194,17 @@ def predict(data,visualize):
         angle,didCollide = collision_update(x, y, angle)
         OTHER['lastAngle'] = angle
         OTHER['turningAngle'] = angle - OTHER['lastAngle']
-        OTHER['distance'] = distance_between((x,y),OTHER['lastMeasurement'])
+        #OTHER['distance'] = distance_between((x,y),OTHER['lastMeasurement'])
+        vectorDistance = distance_between((x,y),(x+xVector,y+yVector))
+        OTHER['distance'] = vectorDistance
         X,P = kalman_filter((x,y),OTHER,X,P)
         OTHER['lastMeasurement'] = (x,y)
 
         if didCollide:#Reset historical
             historicalDeque = deque(maxlen=historicalDequeSize)
         else:
-            #normalizedVector = OTHER['distance'] * (cos(OTHER['lastAngle']+OTHER['turningAngle'])+sin(OTHER['lastAngle']+OTHER['turningAngle']))
             normalizedVector = (OTHER['distance']*cos(OTHER['lastAngle'] + OTHER['turningAngle']),OTHER['distance']*sin(OTHER['lastAngle'] + OTHER['turningAngle']))
+            #normalizedVector = (cos(OTHER['lastAngle'] + OTHER['turningAngle']),sin(OTHER['lastAngle'] + OTHER['turningAngle']))
             if len(historicalDeque) == historicalDequeSize:
                 historicalDeque.popleft()
             historicalDeque.append(normalizedVector)
